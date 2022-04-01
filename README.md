@@ -21,3 +21,7 @@ conn.sendline('111111')
 target = conn.recvline().decode('utf-8').strip()
 conn.close()
 ```
+### Calculating The ENC_B(M)
+for combo in itertools.product(string.digits, repeat=6):
+    key = pad(''.join(combo))
+    lookup[single_encrypt('111111', key)] = key
