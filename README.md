@@ -27,7 +27,7 @@ for combo in itertools.product(string.digits, repeat=6):
     key = pad(''.join(combo))
     lookup[single_encrypt('111111', key)] = key
 ```
-#### Calculating DEC_A(ENC_A(ENC_B(M)))
+#### Calculating X such that DEC_X(ENC_A(ENC_B(M))) = ENC_B(M)
 ```
 for combo in itertools.product(string.digits, repeat=6):
     key = pad(''.join(combo))
