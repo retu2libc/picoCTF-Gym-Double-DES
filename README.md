@@ -8,7 +8,7 @@ This is pretty much standard DES with super small keys except its encrypted twic
 Honestly the worst part of this challenge is the fact that the second encoding treats the strings as their literal byte values so instead of ```b'111111     '``` we're dealing with ```b'\x11\x11\x11     '```.
    
    
-A close second might be the fact that ```YOU DON'T WRAP THE SOLUTION``` with picoCTF{} like literally every other challenge.
+A close second might be the fact that ```YOU DON'T WRAP THE SOLUTION``` with picoCTF{}. Unlike literally every other challenge.
 ## Code Breakdown
 I guess since its a write up I'll also break down the code
 #### Talking To The Server
