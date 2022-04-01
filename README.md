@@ -9,3 +9,15 @@ Honestly the worst part of this challenge is the fact that the second encoding t
    
    
 A close second might be the fact that ```YOU DON'T WRAP THE SOLUTION``` with picoCTF{} like literally every other challenge.
+## Code Breakdown
+I guess since its a write up I'll also break down the code
+### Talking To The Server
+```
+conn = pwn.remote('mercury.picoctf.net', 5958)
+conn.recvuntil("Here is the flag:\n")
+flag = conn.recvline().decode('utf-8').strip()
+conn.recvuntil("What data would you like to encrypt? ")
+conn.sendline('111111')
+target = conn.recvline().decode('utf-8').strip()
+conn.close()
+```
