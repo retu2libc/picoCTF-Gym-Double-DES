@@ -1,10 +1,11 @@
-#!/usr/bin/python3 -u
+#!/usr/bin/python3
 from Crypto.Cipher import DES
 import binascii
 import itertools
 import pwn
 import string
 import random
+
 
 def pad(msg):
     block_len = 8
@@ -23,7 +24,6 @@ def single_decrypt(msg, KEY1):
 
 def double_encrypt(m, KEY1, KEY2):
     msg = pad(m)
-
     cipher1 = DES.new(KEY1, DES.MODE_ECB)
     enc_msg = cipher1.encrypt(msg)
     cipher2 = DES.new(KEY2, DES.MODE_ECB)
@@ -40,27 +40,31 @@ def generate_key():
     key = pad(base)
     return key
 
-conn = pwn.remote('mercury.picoctf.net', 5958)
-conn.recvuntil("Here is the flag:\n")
-flag = conn.recvline().decode('utf-8').strip()
-conn.recvuntil("What data would you like to encrypt? ")
-conn.sendline('111111')
-target = conn.recvline().decode('utf-8').strip()
-conn.close()
-lookup = {}
-potential_keys = []
-for combo in itertools.product(string.digits, repeat=6):
-    key = pad(''.join(combo))
-    lookup[single_encrypt('111111', key)] = key
-for combo in itertools.product(string.digits, repeat=6):
-    key = pad(''.join(combo))
-    candidate_pt = binascii.hexlify(single_decrypt(target, key)).decode()
-    if candidate_pt in lookup:
-        potential_keys.append({lookup[candidate_pt], key})
+def main():
+    conn = pwn.remote('mercury.picoctf.net', 5958)
+    conn.recvuntil("Here is the flag:\n")
+    flag = conn.recvline().decode('utf-8').strip()
+    conn.recvuntil("What data would you like to encrypt? ")
+    conn.sendline('111111')
+    target = conn.recvline().decode('utf-8').strip()
+    conn.close()
+    lookup = {}
+    potential_keys = []
+    for combo in itertools.product(string.digits, repeat=6):
+        key = pad(''.join(combo))
+        lookup[single_encrypt('111111', key)] = key
+    for combo in itertools.product(string.digits, repeat=6):
+        key = pad(''.join(combo))
+        candidate_pt = binascii.hexlify(single_decrypt(target, key)).decode()
+        if candidate_pt in lookup:
+            potential_keys.append({lookup[candidate_pt], key})
 
-for (key1, key2) in potential_keys:
-    try:
-        print(double_decrypt(flag, key1, key2).decode())
-        break
-    except:
-        continue
+    for (key1, key2) in potential_keys:
+        try:
+            print(double_decrypt(flag, key1, key2).decode())
+            break
+        except:
+            continue
+
+if __name__ == "__main__":
+    main()
